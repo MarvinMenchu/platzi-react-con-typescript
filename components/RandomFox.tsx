@@ -1,0 +1,21 @@
+import { FC, FunctionComponent } from 'react';
+
+export const RandonFox2 = () => {
+    return <img />
+}
+
+//generar a random function  1 a 123
+const random = Math.floor(Math.random() * 123) + 1
+
+export const RandonFox = (): JSX.Element => { // recomendado para usar
+    const image = `https://randomfox.ca/images/${random}.jpg`;
+    return <img width={320} height="auto" className="rounded" src={image} />
+}
+
+export const RandonFox3: FunctionComponent = () => {
+    return <img />
+}
+
+export const RandonFox4: FC = () => {
+    return <img />
+}
