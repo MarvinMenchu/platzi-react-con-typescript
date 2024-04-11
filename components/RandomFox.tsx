@@ -1,11 +1,14 @@
 import { useRef, useEffect, useState } from 'react'
+import type { ImgHTMLAttributes } from 'react'
 
 
-type Props = {image: string, alt: string}
+type LazyImageProps = {src: string, alt: string}
+type ImageNative = ImgHTMLAttributes<HTMLImageElement>
+type Props = LazyImageProps & ImageNative
 
-export const RandonFox = ({image, alt}: Props): JSX.Element => { // recomendado para usar
+export const LazyImage = ({src, alt, ...imgProps}: Props): JSX.Element => { // recomendado para usar
     const node = useRef<HTMLImageElement>(null)
-    const [src, setSrc] = useState(
+    const [currentSrc, setCurrentSrc] = useState(
         '"data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIwIiBoZWlnaHQ9IjMyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2ZXJzaW9uPSIxLjEiLz4='
     )
 
@@ -15,7 +18,7 @@ export const RandonFox = ({image, alt}: Props): JSX.Element => { // recomendado 
             entries.forEach(entry => {
                 // onInteraction -> console.log
                 if (entry.isIntersecting) {
-                    setSrc(image)
+                    setCurrentSrc(src)
                 }
             })
         })
@@ -28,16 +31,15 @@ export const RandonFox = ({image, alt}: Props): JSX.Element => { // recomendado 
     //desconectar
     return () => observer.disconnect()
 
-    }, [image])
-        
-    
+    }, [src])
 
-    
-
-    
-
-
-    return (<img ref={node} width={320} height="auto" className="rounded bg-gray-300" src={src} />)
+    return (
+    <img 
+        ref={node} 
+        src={currentSrc}
+        alt={alt} 
+        {...imgProps}
+    />)
 }
 
 
