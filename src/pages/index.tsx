@@ -5,6 +5,7 @@ import { RandonFox } from "../../components/RandomFox";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
+  const random = Math.floor(Math.random() * 123) + 1
   return (
     <>
       <Head>
@@ -17,7 +18,7 @@ export default function Home() {
         Hello, Platzi!
         
       </h1>
-      <RandonFox />
+      <RandonFox alt={'Fox'} image={`https://randomfox.ca/images/${random}.jpg`}/>
       </main>
     </>
   );

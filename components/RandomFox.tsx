@@ -5,10 +5,10 @@ export const RandonFox2 = () => {
 }
 
 //generar a random function  1 a 123
-const random = Math.floor(Math.random() * 123) + 1
 
-export const RandonFox = (): JSX.Element => { // recomendado para usar
-    const image = `https://randomfox.ca/images/${random}.jpg`;
+type Props = {image: string}
+
+export const RandonFox = ({image}: Props): JSX.Element => { // recomendado para usar
     return <img width={320} height="auto" className="rounded" src={image} />
 }
 
