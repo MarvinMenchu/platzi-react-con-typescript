@@ -2,24 +2,41 @@ import { useRef, useEffect, useState } from 'react'
 import type { ImgHTMLAttributes } from 'react'
 
 
-type LazyImageProps = {src: string, alt: string}
+type LazyImageProps = {src: string, alt: string, onLazyLoad?: (node : HTMLImageElement) => void}
 type ImageNative = ImgHTMLAttributes<HTMLImageElement>
 type Props = LazyImageProps & ImageNative
 
-export const LazyImage = ({src, alt, ...imgProps}: Props): JSX.Element => { // recomendado para usar
+export const LazyImage = ({src, alt, onLazyLoad, ...imgProps}: Props): JSX.Element => { // recomendado para usar
     const node = useRef<HTMLImageElement>(null)
+    const [isLazyLoad, setIsLazyLoad] = useState(false)
     const [currentSrc, setCurrentSrc] = useState(
         '"data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIwIiBoZWlnaHQ9IjMyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2ZXJzaW9uPSIxLjEiLz4='
     )
 
     useEffect(() => {
+        if (isLazyLoad) {
+            return
+        }
         // nuevo observador
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                // onInteraction -> console.log
-                if (entry.isIntersecting) {
-                    setCurrentSrc(src)
+                if (!entry.isIntersecting || !node.current) {
+                    return
                 }
+                setCurrentSrc(src)
+                observer.disconnect()
+                setIsLazyLoad(true)
+
+                if (typeof onLazyLoad === 'function') {
+                    onLazyLoad(node.current)
+                }
+
+                // onInteraction -> console.log
+                // if (entry.isIntersecting) {
+                //     setCurrentSrc(src)
+                //     onLazyLoad && onLazyLoad(entry.target as HTMLImageElement)
+                //     observer.unobserve(entry.target)
+                // }
             })
         })
 
@@ -31,7 +48,7 @@ export const LazyImage = ({src, alt, ...imgProps}: Props): JSX.Element => { // r
     //desconectar
     return () => observer.disconnect()
 
-    }, [src])
+    }, [src, onLazyLoad, isLazyLoad])
 
     return (
     <img 
