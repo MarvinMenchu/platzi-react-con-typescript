@@ -3,24 +3,24 @@ import type { MouseEventHandler } from "react";
 import Head from "next/head";
 import { Inter } from "next/font/google";
 import { LazyImage } from "../../components/RandomFox";
+import { random, uniqueId } from 'lodash'
 
 const inter = Inter({ subsets: ["latin"] });
 
 //generar a random function  1 a 123
-const random = () => Math.floor(Math.random() * 123) + 1
-type ImageItem = {id: string, url: string}
+const myRandom = () => random(1, 100)
 
 // generate simple unique id 
-const generateId = () => Math.random().toString(36).substr(2, 9);
+const generateId = () => uniqueId()
 
 
 export default function Home() {
-  const [images, setImages] = useState<Array<ImageItem>>([])
+  const [images, setImages] = useState<Array<IFoxImageItem>>([])
 
   const addNewFox: MouseEventHandler<HTMLButtonElement> = (event) => { // modo profesional de typescript para eventos de boton
     const newImageitem = {
       id: generateId(),
-      url: `https://randomfox.ca/images/${random()}.jpg`
+      url: `https://randomfox.ca/images/${myRandom()}.jpg`
     }
     setImages([...images, newImageitem])
   }
